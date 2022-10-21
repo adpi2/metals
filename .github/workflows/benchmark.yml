@@ -1,0 +1,100 @@
+name: Benchmark
+on:
+  push:
+    branches: [benchmark]
+
+jobs:
+  sbt-perf:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+        jvm: ['adopt:1.8.0-292', 'adopt:1.11.0.11', 'temurin:1.17.0.3']
+    name: sbt perf on ${{ matrix.os }} -- ${{ matrix.jvm }}
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v3
+    - uses: coursier/setup-action@v1.2.0
+      with:
+        jvm: ${{ matrix.jvm }}
+        apps: sbtn
+    - name: Warming
+      run: |
+        sbtn mtags/clean
+        sbtn mtags/compile
+        sbtn mtags/clean
+        sbtn mtags/compile
+        sbtn mtags/clean
+        sbtn mtags/compile
+        sbtn mtags/clean
+        sbtn mtags/compile
+        sbtn mtags/clean
+        sbtn mtags/compile
+    - name: Measure 1
+      run: |
+        sbtn mtags/clean
+        sbtn mtags/compile
+    - name: Measure 2
+      run: |
+        sbtn mtags/clean
+        sbtn mtags/compile
+    - name: Measure 3
+      run: |
+        sbtn mtags/clean
+        sbtn mtags/compile
+    - name: Measure 4
+      run: |
+        sbtn mtags/clean
+        sbtn mtags/compile
+    - name: Measure 5
+      run: |
+        sbtn mtags/clean
+        sbtn mtags/compile
+  bloop-perf:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+        jvm: ['adopt:1.8.0-292', 'adopt:1.11.0.11', 'temurin:1.17.0.3']
+    name: Bloop perf on ${{ matrix.os }} -- ${{ matrix.jvm }}
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v3
+    - uses: coursier/setup-action@v1.2.0
+      with:
+        jvm: ${{ matrix.jvm }}
+        apps: sbt bloop
+    - name: Install Bloop
+      run: sbt bloopInstall
+    - name: Warming
+      run: |
+        bloop clean mtags
+        bloop compile mtags
+        bloop clean mtags
+        bloop compile mtags
+        bloop clean mtags
+        bloop compile mtags
+        bloop clean mtags
+        bloop compile mtags
+        bloop clean mtags
+        bloop compile mtags
+    - name: Measure 1
+      run: |
+        bloop clean mtags
+        bloop compile mtags
+    - name: Measure 2
+      run: |
+        bloop clean mtags
+        bloop compile mtags
+    - name: Measure 3
+      run: |
+        bloop clean mtags
+        bloop compile mtags
+    - name: Measure 4
+      run: |
+        bloop clean mtags
+        bloop compile mtags
+    - name: Measure 5
+      run: |
+        bloop clean mtags
+        bloop compile mtags

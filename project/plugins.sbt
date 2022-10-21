@@ -8,3 +8,5 @@ addSbtPlugin("com.github.reibitto" % "sbt-welcome" % "0.2.2")
 libraryDependencies += "org.scala-sbt" %% "scripted-plugin" % sbtVersion.value
 
 resolvers += Resolver.sonatypeRepo("public")
+
+addSbtPlugin("ch.epfl.scala" % "sbt-bloop" % "1.5.4")
