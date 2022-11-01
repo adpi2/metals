@@ -28,7 +28,7 @@ jobs:
       - uses: olafurpg/setup-scala@v13
         with:
           java-version: adopt@1.11
-      - uses: coursier/cache-action@v6.3
+      - uses: coursier/cache-action@v6.4
       - name: "Test and push tag"
         run: |
           sbt 'test-mtags-dyn ${{ github.event.inputs.scala_version }}'
