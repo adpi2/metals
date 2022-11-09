@@ -128,27 +128,32 @@ private[debug] final class RemoteServer(
   }
 
   private def listen(): Unit = {
-    remote.listen {
-      case response: Response =>
-        ongoing.remove(response.getId) match {
-          case Some(callback) =>
-            callback(response)
-          case None =>
-            scribe.error(s"Response to invalid message: [$response]")
-        }
-      case notification: Notification =>
-        notification.getMethod match {
-          case "output" =>
-            notify(notification, listener.onOutput)
-          case "stopped" =>
-            notify(notification, listener.onStopped)
-          case "terminated" =>
-            listener.onTerminated()
-          case _ =>
-            scribe.debug(s"Unsupported notification: ${notification.getMethod}")
-        }
-      case msg =>
-        scribe.error(s"Message [$msg] is not supported")
+    remote.listen { m =>
+      scribe.info(s"received $m")
+      m match {
+        case response: Response =>
+          ongoing.remove(response.getId) match {
+            case Some(callback) =>
+              callback(response)
+            case None =>
+              scribe.error(s"Response to invalid message: [$response]")
+          }
+        case notification: Notification =>
+          notification.getMethod match {
+            case "output" =>
+              notify(notification, listener.onOutput)
+            case "stopped" =>
+              notify(notification, listener.onStopped)
+            case "terminated" =>
+              listener.onTerminated()
+            case _ =>
+              scribe.debug(
+                s"Unsupported notification: ${notification.getMethod}"
+              )
+          }
+        case msg =>
+          scribe.error(s"Message [$msg] is not supported")
+      }
     }
   }
 
