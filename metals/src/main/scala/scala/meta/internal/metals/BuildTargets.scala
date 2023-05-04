@@ -240,6 +240,19 @@ final class BuildTargets private (
     }
   }
 
+  def findBuildTargetForTwirlFile(
+      twirlFile: AbsolutePath
+  ): Option[BuildTargetIdentifier] = {
+    data.iterator
+      .flatMap(data => data.allScala)
+      .filter { target =>
+        val baseDirectory = target.info.baseDirectory.toAbsolutePath
+        twirlFile.startWith(baseDirectory)
+      }
+      .headOption
+      .map(_.info.getId)
+  }
+
   def inverseSourcesBsp(
       source: AbsolutePath
   )(implicit ec: ExecutionContext): Future[Option[BuildTargetIdentifier]] = {

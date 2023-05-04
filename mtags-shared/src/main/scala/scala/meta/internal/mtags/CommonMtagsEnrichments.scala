@@ -262,6 +262,11 @@ trait CommonMtagsEnrichments {
       doc.isScala || isScalaScript || isSbt || isJavaFilename
     def isJavaFilename: Boolean =
       doc.endsWith(".java")
+    def isTwirlFilename: Boolean =
+      doc.endsWith(".scala.txt") ||
+        doc.endsWith(".scala.html") ||
+        doc.endsWith(".scala.xml") ||
+        doc.endsWith(".scala.csv")
     def isAmmoniteGeneratedFile: Boolean =
       doc.endsWith(".amm.sc.scala")
     def isScalaCLIGeneratedFile: Boolean =

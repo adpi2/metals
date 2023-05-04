@@ -1070,6 +1070,7 @@ class MetalsLspService(
         ()
       }
     } else {
+
       buildServerPromise.future.flatMap { _ =>
         def load(): Future[Unit] = {
           val compileAndLoad =
