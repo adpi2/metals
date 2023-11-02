@@ -167,11 +167,16 @@ final class Compilations(
       path: AbsolutePath
   ): Future[Option[b.BuildTargetIdentifier]] = {
     val isCompilable =
-      (path.isScalaOrJava || path.isSbt) &&
-        !path.isDependencySource(workspace())
+      (path.isScalaOrJava || path.isSbt || path.isTwirlFilename) && !path
+        .isDependencySource(workspace())
 
     if (isCompilable) {
-      val targetOpt = buildTargets.inverseSourcesBsp(path)
+      val targetOpt = if (path.isTwirlFilename) {
+        Future.successful(buildTargets.findBuildTargetForTwirlFile(path))
+      } else {
+        buildTargets.inverseSourcesBsp(path)
+      }
+
       targetOpt.foreach {
         case tgts if tgts.isEmpty => scribe.warn(s"no build target for: $path")
         case _ =>

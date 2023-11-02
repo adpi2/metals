@@ -229,6 +229,7 @@ trait ScalametaCommonEnrichments extends CommonMtagsEnrichments {
     def isScalaFilename: Boolean = filename.isScalaFilename
     def isJavaFilename: Boolean = filename.isJavaFilename
     def isScalaOrJavaFilename: Boolean = isScalaFilename || isJavaFilename
+    def isTwirlFilename: Boolean = filename.isTwirl
   }
 
   implicit class XtensionStream[A](stream: java.util.stream.Stream[A]) {
@@ -366,6 +367,10 @@ trait ScalametaCommonEnrichments extends CommonMtagsEnrichments {
     def isScalaFilename: Boolean = {
       filename.isScalaFilename
     }
+    def isTwirlFilename: Boolean = {
+      filename.isTwirl
+    }
+
     def isScala: Boolean = {
       toLanguage == Language.SCALA && isFile
     }
